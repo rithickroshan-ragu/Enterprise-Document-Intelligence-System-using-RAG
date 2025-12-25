@@ -1,0 +1,26 @@
+Introduction:
+Retrieval-Augmented Generation (RAG) is a technique that enhances language model generation by incorporating external knowledge.
+This is typically done by retrieving relevant information from a large corpus of documents and using that information to inform the generation process.
+Challenge:
+Clients often have vast proprietary documents.
+Extracting specific information is like finding a needle in a haystack.
+2. GPT4-Turbo Introduction:
+OpenAI’s GPT4-Turbo can process large documents.
+3. Efficiency Issue:
+“Lost In The Middle” phenomenon hampers efficiency.
+Model forgets content in the middle of its contextual window.
+4. Alternative Approach — Retrieval-Augmented-Generation (RAG):
+Create an index for each document paragraph.
+Swiftly identify pertinent paragraphs.
+Feed selected paragraphs into a Large Language Model (LLM) like GPT4.
+5. Advantages:
+Prevents information overload.
+Enhances result quality by providing only relevant paragraphs.
+The Retrieval Augmented Generation (RAG) Pipeline
+With RAG, the LLM is able to leverage knowledge and information that is not necessarily in its weights by providing it access to external knowledge sources such as databases.
+It leverages a retriever to find relevant contexts to condition the LLM, in this way, RAG is able to augment the knowledge-base of an LLM with relevant documents.
+The retriever here could be any of the following depending on the need for semantic retrieval or not:
+Vector database: Typically, queries are embedded using models like BERT for generating dense vector embeddings. Alternatively, traditional methods like TF-IDF can be used for sparse embeddings. The search is then conducted based on term frequency or semantic similarity.
+Graph database: Constructs a knowledge base from extracted entity relationships within the text. This approach is precise but may require exact query matching, which could be restrictive in some applications.
+Regular SQL database: Offers structured data storage and retrieval but might lack the semantic flexibility of vector databases.
+The image below from Damien Benveniste, PhD talks a bit about the difference between using Graph vs Vector database for RAG.
