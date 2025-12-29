@@ -1,4 +1,3 @@
-import os
 from services.agent import Agent
 from services.vectorstore import Vectorstore
 from langchain.messages import HumanMessage
@@ -25,7 +24,9 @@ def ask_llm(prompt):
     context = "\n> ".join(content)
     augmented_prompt = prompt_template.invoke(input={"context": context, "query": prompt})
     response = agent.invoke(augmented_prompt, config)
-    print(response["messages"][-1].content)
+    response_text = response["messages"][-1].content
+    print(response_text)
+    return response_text
 
 
 def uplaod_documents():
@@ -60,6 +61,6 @@ def main():
                 print("Invalid choice")
 
 
-if __name__=="__main__":
-    main()
+# if __name__=="__main__":
+#     main()
 
