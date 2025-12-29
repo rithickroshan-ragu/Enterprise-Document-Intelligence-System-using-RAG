@@ -4,8 +4,10 @@ export default function App() {
   const [messages, setMessages] = useState([
     { from: "bot", text: "Hello — ask me about your documents." },
   ]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -39,25 +41,103 @@ export default function App() {
     }
   };
 
+  const handleUpload = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith(".pdf") && file.type !== "application/pdf") {
+      setMessages((m) => [...m, { from: "bot", text: "Only PDF files are accepted." }]);
+      e.target.value = null;
+      return;
+    }
+
+    setMessages((m) => [...m, { from: "user", text: `Uploading ${file.name}...` }]);
+    const form = new FormData();
+    form.append("file", file);
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/upload_pdf", {
+        method: "POST",
+        body: form,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Upload failed");
+      setMessages((m) => [...m, { from: "bot", text: `Uploaded: ${data.filename}` }]);
+      setUploadedFiles((f) => [data.filename, ...f]);
+    } catch (err) {
+      setMessages((m) => [...m, { from: "bot", text: `Upload error: ${err.message}` }]);
+    } finally {
+      e.target.value = null;
+    }
+  };
+
+  const clearAll = async () => {
+    const ok = window.confirm("Clear all uploaded files and chat history? This cannot be undone.");
+    if (!ok) return;
+    try {
+      await fetch("http://127.0.0.1:8000/api/clear_session", { method: "POST" });
+    } catch (err) {
+      // ignore backend errors, still clear UI
+    }
+    setUploadedFiles([]);
+    setMessages([{ from: "bot", text: "Hello — ask me about your documents." }]);
+  };
+
   return (
     <div className="container">
-      <header className="header">Document RAG — Chat</header>
-      <main className="chat">
-        {messages.map((m, i) => (
-          <div key={i} className={`message ${m.from}`}>
-            <div className="bubble">{m.text}</div>
+      <header className="header">
+        <div>Document RAG — Chat</div>
+        <div>
+          <button className="clear-btn" onClick={clearAll}>Clear All</button>
+        </div>
+      </header>
+      <main className="layout">
+        <aside className="sidebar">
+          <div className="uploads">
+            <div className="uploads-title">Uploaded Files (session)</div>
+            {uploadedFiles.length === 0 ? (
+              <div className="uploads-empty">No files uploaded</div>
+            ) : (
+              <ul className="uploads-list">
+                {uploadedFiles.map((f, idx) => (
+                  <li key={idx} className="uploads-item">{f}</li>
+                ))}
+              </ul>
+            )}
           </div>
-        ))}
-        <div ref={messagesEndRef} />
+        </aside>
+
+        <section className="chat-column">
+          <div className="chat">
+            {messages.map((m, i) => (
+              <div key={i} className={`message ${m.from}`}>
+                <div className="bubble">{m.text}</div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <form className="composer" onSubmit={send}>
+            <input
+              placeholder="Type a question about your documents..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button type="button" onClick={() => fileInputRef.current?.click()}>
+                Upload PDF
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="application/pdf,.pdf"
+                style={{ display: "none" }}
+                onChange={handleUpload}
+              />
+              <button type="submit">Send</button>
+            </div>
+          </form>
+        </section>
       </main>
-      <form className="composer" onSubmit={send}>
-        <input
-          placeholder="Type a question about your documents..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button type="submit">Send</button>
-      </form>
     </div>
   );
 }

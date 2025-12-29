@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from pypdf import PdfReader
 from langchain_chroma import Chroma
@@ -23,6 +24,7 @@ class Vectorstore:
     def initialize_vectorstore(self):
         embedding_model = self._instantiate_embedding_model()
         self.vectorstore = Chroma(
+            collection_name="document_collection",
             embedding_function=embedding_model,
             persist_directory=self.db_path
         )
@@ -35,6 +37,18 @@ class Vectorstore:
         return self.vectorstore.similarity_search(query)
     
     def reset_collection(self):
+        """Safely clear the persistent Chroma data."""
+        # # remove the persisted DB files
+        # if os.path.exists(self.db_path):
+        #     try:
+        #         shutil.rmtree(self.db_path)
+        #     except Exception:
+        #         # if remove fails, continue and attempt to recreate the directory
+        #         pass
+
+        # recreate the directory and reinitialize the vectorstore
+        # os.makedirs(self.db_path, exist_ok=True)
+        # self.initialize_vectorstore()
         self.vectorstore.reset_collection()
 
     def _read_and_chunk_pdf(self, path):

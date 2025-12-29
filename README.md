@@ -1,4 +1,6 @@
 
+![UI Screenshot](images/ui-image.png)
+
 **Enterprise Document Intelligence — RAG**
 
 - **Project Scope**: Build a Retrieval-Augmented Generation (RAG) system for enterprise document intelligence. The project ingests documents, embeds them into a vector store (Chroma), and uses an LLM (via OpenAI / Azure OpenAI) to answer user queries grounded in the retrieved documents.

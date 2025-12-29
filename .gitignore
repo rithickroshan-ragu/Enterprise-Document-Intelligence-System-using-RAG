@@ -3,6 +3,9 @@
 plan.txt
 __pycache__/
 
+chromadb_data/*
+tmp_uploads/*
+
 
 # Node modules
 

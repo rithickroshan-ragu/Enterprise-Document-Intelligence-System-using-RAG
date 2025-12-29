@@ -7,8 +7,11 @@
 *{box-sizing:border-box}
 html,body,#root{height:100%}
 body{margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:#e6eef8;background:linear-gradient(180deg,#081022 0%, #071226 100%)}
-.container{max-width:720px;margin:32px auto;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(2,6,23,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;flex-direction:column;height:80vh}
+.container{max-width:980px;margin:32px auto;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(2,6,23,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;flex-direction:column;height:86vh}
 .header{padding:16px 20px;font-weight:600;color:var(--accent);background:transparent}
+.header{padding:16px 20px;font-weight:600;color:var(--accent);background:transparent;display:flex;align-items:center;justify-content:space-between}
+.clear-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 10px;border-radius:8px;font-weight:600;cursor:pointer}
+.clear-btn:hover{background:rgba(255,255,255,0.02);color:white}
 .chat{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:10px}
 .message{display:flex}
 .message.bot{justify-content:flex-start}
@@ -18,3 +21,31 @@ body{margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe
 .composer{display:flex;gap:10px;padding:12px;background:transparent;border-top:1px solid rgba(255,255,255,0.03)}
 .composer input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
 .composer button{padding:10px 14px;border-radius:10px;border:none;background:var(--accent);color:white;font-weight:600}
+
+.uploads{background:rgba(255,255,255,0.02);border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,0.03)}
+.uploads-title{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:8px}
+.uploads-empty{color:var(--muted);font-size:13px}
+.uploads-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+.uploads-item{font-size:13px;color:#d6e8ff;padding:6px 8px;border-radius:6px;background:rgba(255,255,255,0.01);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Layout for sidebar + chat column */
+.layout{display:flex;gap:18px;padding:18px;height:calc(86vh - 56px)}
+.sidebar{width:220px;flex:0 0 220px}
+.chat-column{flex:3;display:flex;flex-direction:column;min-width:0}
+.chat{flex:1;overflow:auto;padding-right:8px;padding-left:6px}
+
+/* Ensure composer sits below chat and doesn't scroll with messages */
+.composer{display:flex;gap:10px;padding:12px;background:transparent;border-top:1px solid rgba(255,255,255,0.03)}
+.composer input{flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+.composer button{padding:10px 14px;border-radius:10px;border:none;background:var(--accent);color:white;font-weight:600}
+
+/* Bigger message bubbles */
+.bubble{max-width:85%;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,0.03);color:#d6e8ff}
+
+/* Responsive: stack sidebar above chat on narrow viewports */
+@media (max-width: 900px){
+  .container{max-width:720px}
+  .layout{flex-direction:column;height:auto}
+  .sidebar{width:auto;flex:0 0 auto}
+  .chat-column{flex:1}
+}

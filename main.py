@@ -14,7 +14,6 @@ agent.initialize_agent()
 vectorstore = Vectorstore(db_path= "./chromadb_data")
 vectorstore.initialize_vectorstore()
 
-
 def ask_llm(prompt):
     config={
         "configurable": {"thread_id": "1"}
@@ -29,14 +28,12 @@ def ask_llm(prompt):
     return response_text
 
 
-def uplaod_documents():
-    path = input("Enter path: ")
+def uplaod_documents(path):
     vectorstore.add_documents(path=path)
 
 
 def clear_database():
     vectorstore.reset_collection()
-
 
 def main():
 
