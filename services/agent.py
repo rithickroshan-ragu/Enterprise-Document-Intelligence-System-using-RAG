@@ -3,13 +3,10 @@ from langchain.chat_models import init_chat_model
 from langchain.agents import create_agent
 from langchain.messages import SystemMessage
 from langgraph.checkpoint.memory import InMemorySaver
-from dotenv import load_dotenv
 
-load_dotenv()
-
-class AgentBuilder:
-    def __init__(self, model_name, system_prompt):
-        self.model_name=model_name
+class Agent:
+    def __init__(self, system_prompt):
+        self.model_name=os.getenv("OPENAI_CHAT_MODEL")
         self.system_prompt=system_prompt
 
     def _instantiate_chat_model(self):
@@ -22,16 +19,16 @@ class AgentBuilder:
 
         return model
 
-    def create_agent(self):
+    def initialize_agent(self):
         chat_model = self._instantiate_chat_model()
-        agent=create_agent(
+        self.agent=create_agent(
             model=chat_model,
             tools=[],
             system_prompt=SystemMessage(self.system_prompt),
             checkpointer=InMemorySaver()
         )
-
-        return agent
     
+    def invoke(self, prompt, config):
+        return self.agent.invoke(prompt, config)
     
 
